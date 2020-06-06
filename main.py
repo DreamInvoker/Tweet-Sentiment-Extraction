@@ -7,10 +7,11 @@ import pandas as pd
 import torch
 import torch.optim as optim
 from sklearn.model_selection import StratifiedKFold
+from tqdm import tqdm
 
 from dataset import get_train_val_loaders, get_test_loader
 from model import TweetModel
-from utils import loss_fn, get_selected_text, compute_jaccard_score
+from utils import loss_fn, get_selected_text, compute_jaccard_score, EarlyStopping
 
 warnings.filterwarnings('ignore')
 
@@ -30,12 +31,14 @@ def seed_everything(seed_value):
 
 seed = 42
 seed_everything(seed)
+MODEL_PATH = 'roberta-base'
 
 
 def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs, filename):
     model.cuda()
-
+    es = EarlyStopping(patience=2, mode="max")
     for epoch in range(num_epochs):
+        flag = False
         for phase in ['train', 'val']:
             if phase == 'train':
                 model.train()
@@ -44,8 +47,9 @@ def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs, filen
 
             epoch_loss = 0.0
             epoch_jaccard = 0.0
-
-            for data in (dataloaders_dict[phase]):
+            data_loader = dataloaders_dict[phase]
+            tk0 = tqdm(enumerate(data_loader), total=len(data_loader))
+            for index, data in tk0:
                 ids = data['ids'].cuda()
                 masks = data['masks'].cuda()
                 tweet = data['tweet']
@@ -54,7 +58,7 @@ def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs, filen
                 end_idx = data['end_idx'].cuda()
 
                 optimizer.zero_grad()
-
+                step_jaccard = 0.0
                 with torch.set_grad_enabled(phase == 'train'):
 
                     start_logits, end_logits = model(ids, masks)
@@ -81,14 +85,23 @@ def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs, filen
                             end_logits[i],
                             offsets[i])
                         epoch_jaccard += jaccard_score
-
+                        step_jaccard += jaccard_score
+                    tk0.set_postfix(stp='{}/{}'.format(index, len(data_loader)),
+                                    loss='{:.4f}'.format(loss.item()),
+                                    jaccard='{:.4f}'.format(step_jaccard / len(ids)))
             epoch_loss = epoch_loss / len(dataloaders_dict[phase].dataset)
             epoch_jaccard = epoch_jaccard / len(dataloaders_dict[phase].dataset)
 
             print('Epoch {}/{} | {:^5} | Loss: {:.4f} | Jaccard: {:.4f}'.format(
                 epoch + 1, num_epochs, phase, epoch_loss, epoch_jaccard))
-
-    torch.save(model.state_dict(), filename)
+            if phase == 'val':
+                es(epoch_jaccard, model, model_path=filename)
+                if es.early_stop:
+                    print("Early stopping")
+                    flag = True
+        if flag:
+            break
+    # torch.save(model.state_dict(), filename)
 
 
 num_epochs = 3
@@ -102,7 +115,7 @@ train_df['selected_text'] = train_df['selected_text'].astype(str)
 for fold, (train_idx, val_idx) in enumerate(skf.split(train_df, train_df.sentiment), start=1):
     print(f'Fold: {fold}')
 
-    model = TweetModel()
+    model = TweetModel(MODEL_PATH)
     optimizer = optim.AdamW(model.parameters(), lr=3e-5, betas=(0.9, 0.999))
     criterion = loss_fn
     dataloaders_dict = get_train_val_loaders(train_df, train_idx, val_idx, batch_size)
@@ -115,17 +128,22 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(train_df, train_df.sentime
         num_epochs,
         f'roberta_fold{fold}.pth')
 
+
+models = []
+for t in os.listdir('type'):
+    for model_file in os.listdir(os.path.join('type', t)):
+        model = TweetModel(MODEL_PATH=t)
+        model.cuda()
+        model.load_state_dict(torch.load(model_file))
+        model.eval()
+        models.append(model)
+
+
 test_df = pd.read_csv('data/test.csv')
 test_df['text'] = test_df['text'].astype(str)
 test_loader = get_test_loader(test_df)
 predictions = []
-models = []
-for fold in range(skf.n_splits):
-    model = TweetModel()
-    model.cuda()
-    model.load_state_dict(torch.load(f'roberta_fold{fold + 1}.pth'))
-    model.eval()
-    models.append(model)
+
 
 for data in test_loader:
     ids = data['ids'].cuda()

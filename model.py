@@ -2,15 +2,14 @@ import torch
 from torch import nn
 from transformers import RobertaModel, RobertaConfig
 
-
 class TweetModel(nn.Module):
-    def __init__(self):
+    def __init__(self, MODEL_PATH='roberta-base'):
         super(TweetModel, self).__init__()
 
         config = RobertaConfig.from_pretrained(
-            'roberta-base/config.json', output_hidden_states=True)
+            MODEL_PATH + '/config.json', output_hidden_states=True)
         self.roberta = RobertaModel.from_pretrained(
-            'roberta-base/pytorch_model.bin', config=config)
+            MODEL_PATH + '/pytorch_model.bin', config=config)
         self.dropout = nn.Dropout(0.5)
         self.fc = nn.Linear(config.hidden_size, 2)
         nn.init.normal_(self.fc.weight, std=0.02)

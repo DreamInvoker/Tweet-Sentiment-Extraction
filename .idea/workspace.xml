@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ac705277-5acc-4c5f-ae38-5618b6355aaf" name="Default Changelist" comment="" />
+    <list default="true" id="ac705277-5acc-4c5f-ae38-5618b6355aaf" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,7 +21,12 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="MERGE" />
+  </component>
   <component name="ProjectId" id="1cw97St92NnNc0uE2IBQyHylpW8" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -22,6 +34,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
@@ -69,5 +82,27 @@
       <updated>1591428620459</updated>
     </task>
     <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1283" height="158" key="GridCell.Tab.0.bottom" timestamp="1591430303500">
+      <screen x="62" y="0" width="1304" height="768" />
+    </state>
+    <state width="1283" height="158" key="GridCell.Tab.0.bottom/62.0.1304.768@62.0.1304.768" timestamp="1591430303500" />
+    <state width="1283" height="158" key="GridCell.Tab.0.center" timestamp="1591430303500">
+      <screen x="62" y="0" width="1304" height="768" />
+    </state>
+    <state width="1283" height="158" key="GridCell.Tab.0.center/62.0.1304.768@62.0.1304.768" timestamp="1591430303500" />
+    <state width="1283" height="158" key="GridCell.Tab.0.left" timestamp="1591430303499">
+      <screen x="62" y="0" width="1304" height="768" />
+    </state>
+    <state width="1283" height="158" key="GridCell.Tab.0.left/62.0.1304.768@62.0.1304.768" timestamp="1591430303499" />
+    <state width="1283" height="158" key="GridCell.Tab.0.right" timestamp="1591430303500">
+      <screen x="62" y="0" width="1304" height="768" />
+    </state>
+    <state width="1283" height="158" key="GridCell.Tab.0.right/62.0.1304.768@62.0.1304.768" timestamp="1591430303500" />
+    <state x="506" y="300" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1591430332716">
+      <screen x="62" y="0" width="1304" height="768" />
+    </state>
+    <state x="506" y="300" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/62.0.1304.768@62.0.1304.768" timestamp="1591430332716" />
   </component>
 </project>

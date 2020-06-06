@@ -1,6 +1,8 @@
 import tokenizers
 import torch
 
+from main import MODEL_PATH
+
 
 class TweetDataset(torch.utils.data.Dataset):
     def __init__(self, df, max_len=96):
@@ -8,8 +10,8 @@ class TweetDataset(torch.utils.data.Dataset):
         self.max_len = max_len
         self.labeled = 'selected_text' in df
         self.tokenizer = tokenizers.ByteLevelBPETokenizer(
-            vocab_file='roberta-base/vocab.json',
-            merges_file='roberta-base/merges.txt',
+            vocab_file=MODEL_PATH + '/vocab.json',
+            merges_file=MODEL_PATH + '/merges.txt',
             lowercase=True,
             add_prefix_space=True)
 
