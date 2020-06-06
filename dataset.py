@@ -1,11 +1,9 @@
 import tokenizers
 import torch
 
-from main import MODEL_PATH
-
 
 class TweetDataset(torch.utils.data.Dataset):
-    def __init__(self, df, max_len=96):
+    def __init__(self, df, max_len=96, MODEL_PATH='roberta-base'):
         self.df = df
         self.max_len = max_len
         self.labeled = 'selected_text' in df
@@ -82,19 +80,19 @@ class TweetDataset(torch.utils.data.Dataset):
         return start_idx, end_idx
 
 
-def get_train_val_loaders(df, train_idx, val_idx, batch_size=8):
+def get_train_val_loaders(df, train_idx, val_idx, batch_size=8, MODEL_PATH='roberta-base'):
     train_df = df.iloc[train_idx]
     val_df = df.iloc[val_idx]
 
     train_loader = torch.utils.data.DataLoader(
-        TweetDataset(train_df),
+        TweetDataset(train_df, MODEL_PATH=MODEL_PATH),
         batch_size=batch_size,
         shuffle=True,
         num_workers=2,
         drop_last=True)
 
     val_loader = torch.utils.data.DataLoader(
-        TweetDataset(val_df),
+        TweetDataset(val_df, MODEL_PATH=MODEL_PATH),
         batch_size=batch_size,
         shuffle=False,
         num_workers=2)
@@ -104,9 +102,9 @@ def get_train_val_loaders(df, train_idx, val_idx, batch_size=8):
     return dataloaders_dict
 
 
-def get_test_loader(df, batch_size=32):
+def get_test_loader(df, batch_size=32, MODEL_PATH='roberta-base'):
     loader = torch.utils.data.DataLoader(
-        TweetDataset(df),
+        TweetDataset(df, MODEL_PATH=MODEL_PATH),
         batch_size=batch_size,
         shuffle=False,
         num_workers=2)

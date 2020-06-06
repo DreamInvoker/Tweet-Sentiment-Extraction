@@ -2,6 +2,7 @@ import torch
 from torch import nn
 from transformers import RobertaModel, RobertaConfig
 
+
 class TweetModel(nn.Module):
     def __init__(self, MODEL_PATH='roberta-base'):
         super(TweetModel, self).__init__()

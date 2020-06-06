@@ -15,6 +15,12 @@ from utils import loss_fn, get_selected_text, compute_jaccard_score, EarlyStoppi
 
 warnings.filterwarnings('ignore')
 
+import argparse
+
+paser = argparse.ArgumentParser()
+paser.add_argument('--model', type=str, default='roberta-base')
+opt = paser.parse_args()
+
 
 def seed_everything(seed_value):
     random.seed(seed_value)
@@ -31,7 +37,8 @@ def seed_everything(seed_value):
 
 seed = 42
 seed_everything(seed)
-MODEL_PATH = 'roberta-base'
+MODEL_PATH = opt.model
+print(MODEL_PATH)
 
 
 def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs, filename):
@@ -95,7 +102,7 @@ def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs, filen
             print('Epoch {}/{} | {:^5} | Loss: {:.4f} | Jaccard: {:.4f}'.format(
                 epoch + 1, num_epochs, phase, epoch_loss, epoch_jaccard))
             if phase == 'val':
-                es(epoch_jaccard, model, model_path=filename)
+                es(epoch_jaccard, model, model_path="type/" + MODEL_PATH + filename)
                 if es.early_stop:
                     print("Early stopping")
                     flag = True
@@ -104,8 +111,8 @@ def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs, filen
     # torch.save(model.state_dict(), filename)
 
 
-num_epochs = 3
-batch_size = 32
+num_epochs = 5
+batch_size = 16
 skf = StratifiedKFold(n_splits=10, shuffle=True, random_state=seed)
 
 train_df = pd.read_csv('data/train.csv')
@@ -118,7 +125,7 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(train_df, train_df.sentime
     model = TweetModel(MODEL_PATH)
     optimizer = optim.AdamW(model.parameters(), lr=3e-5, betas=(0.9, 0.999))
     criterion = loss_fn
-    dataloaders_dict = get_train_val_loaders(train_df, train_idx, val_idx, batch_size)
+    dataloaders_dict = get_train_val_loaders(train_df, train_idx, val_idx, batch_size, MODEL_PATH)
 
     train_model(
         model,
@@ -127,7 +134,6 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(train_df, train_df.sentime
         optimizer,
         num_epochs,
         f'roberta_fold{fold}.pth')
-
 
 models = []
 for t in os.listdir('type'):
@@ -138,12 +144,10 @@ for t in os.listdir('type'):
         model.eval()
         models.append(model)
 
-
 test_df = pd.read_csv('data/test.csv')
 test_df['text'] = test_df['text'].astype(str)
 test_loader = get_test_loader(test_df)
 predictions = []
-
 
 for data in test_loader:
     ids = data['ids'].cuda()
