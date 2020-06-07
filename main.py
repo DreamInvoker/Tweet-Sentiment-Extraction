@@ -9,13 +9,13 @@ import torch.optim as optim
 from sklearn.model_selection import StratifiedKFold
 from tqdm import tqdm
 
-from dataset import get_train_val_loaders, get_test_loader
+from dataset import get_train_val_loaders
 from model import TweetModel
-from utils import loss_fn, get_selected_text, compute_jaccard_score, EarlyStopping
+from utils import loss_fn, compute_jaccard_score, EarlyStopping
 
 warnings.filterwarnings('ignore')
-
 import argparse
+from test import test
 
 paser = argparse.ArgumentParser()
 paser.add_argument('--model', type=str, default='roberta-base')
@@ -102,7 +102,7 @@ def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs, filen
             print('Epoch {}/{} | {:^5} | Loss: {:.4f} | Jaccard: {:.4f}'.format(
                 epoch + 1, num_epochs, phase, epoch_loss, epoch_jaccard))
             if phase == 'val':
-                es(epoch_jaccard, model, model_path="type/" + MODEL_PATH + filename)
+                es(epoch_jaccard, model, model_path="type/" + MODEL_PATH + '/' + filename)
                 if es.early_stop:
                     print("Early stopping")
                     flag = True
@@ -135,49 +135,4 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(train_df, train_df.sentime
         num_epochs,
         f'roberta_fold{fold}.pth')
 
-models = []
-for t in os.listdir('type'):
-    for model_file in os.listdir(os.path.join('type', t)):
-        model = TweetModel(MODEL_PATH=t)
-        model.cuda()
-        model.load_state_dict(torch.load(model_file))
-        model.eval()
-        models.append(model)
-
-test_df = pd.read_csv('data/test.csv')
-test_df['text'] = test_df['text'].astype(str)
-test_loader = get_test_loader(test_df)
-predictions = []
-
-for data in test_loader:
-    ids = data['ids'].cuda()
-    masks = data['masks'].cuda()
-    tweet = data['tweet']
-    offsets = data['offsets'].numpy()
-
-    start_logits = []
-    end_logits = []
-    for model in models:
-        with torch.no_grad():
-            output = model(ids, masks)
-            start_logits.append(torch.softmax(output[0], dim=1).cpu().detach().numpy())
-            end_logits.append(torch.softmax(output[1], dim=1).cpu().detach().numpy())
-
-    start_logits = np.mean(start_logits, axis=0)
-    end_logits = np.mean(end_logits, axis=0)
-    for i in range(len(ids)):
-        start_pred = np.argmax(start_logits[i])
-        end_pred = np.argmax(end_logits[i])
-        if start_pred > end_pred:
-            pred = tweet[i]
-        else:
-            pred = get_selected_text(tweet[i], start_pred, end_pred, offsets[i])
-        predictions.append(pred)
-
-sub_df = pd.read_csv('data/sample_submission.csv')
-sub_df['selected_text'] = predictions
-sub_df['selected_text'] = sub_df['selected_text'].apply(lambda x: x.replace('!!!!', '!') if len(x.split()) == 1 else x)
-sub_df['selected_text'] = sub_df['selected_text'].apply(lambda x: x.replace('..', '.') if len(x.split()) == 1 else x)
-sub_df['selected_text'] = sub_df['selected_text'].apply(lambda x: x.replace('...', '.') if len(x.split()) == 1 else x)
-sub_df.to_csv('submission.csv', index=False)
-sub_df.head()
+test(MODEL_PATH)
