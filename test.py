@@ -69,3 +69,6 @@ def test(MODEL_PATH='roberta-base'):
         lambda x: x.replace('...', '.') if len(x.split()) == 1 else x)
     sub_df.to_csv('submission.csv', index=False)
     sub_df.head()
+
+if __name__ == '__main__':
+    test()
