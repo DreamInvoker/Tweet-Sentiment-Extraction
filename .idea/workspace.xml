@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ac705277-5acc-4c5f-ae38-5618b6355aaf" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +85,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591774307785</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="initial commit">
+      <created>1591774859988</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1591774859988</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -107,14 +115,14 @@
       <screen x="62" y="0" width="1304" height="768" />
     </state>
     <state x="442" y="186" key="#com.intellij.fileTypes.FileTypeChooser/62.0.1304.768@62.0.1304.768" timestamp="1591774675733" />
-    <state x="277" y="0" key="CommitChangelistDialog2" timestamp="1591774305506">
+    <state x="277" y="0" key="CommitChangelistDialog2" timestamp="1591774858342">
       <screen x="62" y="0" width="1304" height="768" />
     </state>
-    <state x="277" y="0" key="CommitChangelistDialog2/62.0.1304.768@62.0.1304.768" timestamp="1591774305506" />
-    <state x="510" y="274" width="407" height="258" key="Github.ShareDialog" timestamp="1591774339434">
+    <state x="277" y="0" key="CommitChangelistDialog2/62.0.1304.768@62.0.1304.768" timestamp="1591774858342" />
+    <state x="310" y="283" width="407" height="275" key="Github.ShareDialog" timestamp="1591774971836">
       <screen x="62" y="0" width="1304" height="768" />
     </state>
-    <state x="510" y="274" width="407" height="258" key="Github.ShareDialog/62.0.1304.768@62.0.1304.768" timestamp="1591774339434" />
+    <state x="310" y="283" width="407" height="275" key="Github.ShareDialog/62.0.1304.768@62.0.1304.768" timestamp="1591774971836" />
     <state width="1283" height="187" key="GridCell.Tab.0.bottom" timestamp="1591500390162">
       <screen x="62" y="0" width="1304" height="768" />
     </state>
@@ -131,10 +139,10 @@
       <screen x="62" y="0" width="1304" height="768" />
     </state>
     <state width="1283" height="187" key="GridCell.Tab.0.right/62.0.1304.768@62.0.1304.768" timestamp="1591500390162" />
-    <state x="306" y="105" key="Vcs.Push.Dialog.v2" timestamp="1591774310618">
+    <state x="306" y="105" key="Vcs.Push.Dialog.v2" timestamp="1591774862830">
       <screen x="62" y="0" width="1304" height="768" />
     </state>
-    <state x="306" y="105" key="Vcs.Push.Dialog.v2/62.0.1304.768@62.0.1304.768" timestamp="1591774310618" />
+    <state x="306" y="105" key="Vcs.Push.Dialog.v2/62.0.1304.768@62.0.1304.768" timestamp="1591774862830" />
     <state x="506" y="300" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1591430332716">
       <screen x="62" y="0" width="1304" height="768" />
     </state>
