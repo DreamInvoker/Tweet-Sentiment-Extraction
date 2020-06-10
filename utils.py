@@ -3,17 +3,21 @@ import torch
 from torch import nn
 
 
-def loss_fn(start_logits, end_logits, start_positions, end_positions):
+def loss_fn(start_logits, end_logits, start_positions, end_positions, len_cls, length):
     ce_loss = nn.CrossEntropyLoss()
     start_loss = ce_loss(start_logits, start_positions)
     end_loss = ce_loss(end_logits, end_positions)
     total_loss = start_loss + end_loss
+    # mse_loss = nn.MSELoss()
+    # len_loss = mse_loss(len_cls, length)
+    # len_loss = ce_loss(len_cls, length)
+    # total_loss = start_loss + len_loss
     return total_loss
 
 
 def get_selected_text(text, start_idx, end_idx, offsets):
     selected_text = ""
-    for ix in range(start_idx, end_idx + 1):
+    for ix in range(start_idx, min(len(offsets), end_idx + 1)):
         selected_text += text[offsets[ix][0]: offsets[ix][1]]
         if (ix + 1) < len(offsets) and offsets[ix][1] < offsets[ix + 1][0]:
             selected_text += " "
@@ -27,9 +31,11 @@ def jaccard(str1, str2):
     return float(len(c)) / (len(a) + len(b) - len(c))
 
 
-def compute_jaccard_score(text, start_idx, end_idx, start_logits, end_logits, offsets):
+def compute_jaccard_score(text, start_idx, end_idx, start_logits, end_logits, offsets, len_cls):
     start_pred = np.argmax(start_logits)
     end_pred = np.argmax(end_logits)
+    # len_cls = np.argmax(len_cls)
+    # end_pred = start_pred + int(len_cls)
     if start_pred > end_pred:
         pred = text
     else:

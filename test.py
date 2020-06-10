@@ -29,24 +29,34 @@ def test(MODEL_PATH='roberta-base'):
         masks = data['masks'].cuda()
         tweet = data['tweet']
         offsets = data['offsets'].numpy()
+        sentiment = data['sentiment']
 
         start_logits = []
         end_logits = []
+        # len_logits = []
         for model in models:
             with torch.no_grad():
                 output = model(ids, masks)
                 start_logits.append(torch.softmax(output[0], dim=1).cpu().detach().numpy())
                 end_logits.append(torch.softmax(output[1], dim=1).cpu().detach().numpy())
+                # len_logits.append(torch.softmax(output[2], dim=1).cpu().detach().numpy())
 
         start_logits = np.mean(start_logits, axis=0)
         end_logits = np.mean(end_logits, axis=0)
+        # len_logits = np.mean(len_logits, axis=0)
         for i in range(len(ids)):
             start_pred = np.argmax(start_logits[i])
             end_pred = np.argmax(end_logits[i])
+            # length = np.argmax(len_logits[i])
+            # end_pred = start_pred + int(length)
+            sentiment_val = sentiment[i]
+            original_tweet = tweet[i]
             if start_pred > end_pred:
-                pred = tweet[i]
+                pred = original_tweet
             else:
                 pred = get_selected_text(tweet[i], start_pred, end_pred, offsets[i])
+            if sentiment_val == "neutral" or len(original_tweet.split()) < 2:
+                pred = original_tweet
             predictions.append(pred)
 
     sub_df = pd.read_csv('data/sample_submission.csv')
