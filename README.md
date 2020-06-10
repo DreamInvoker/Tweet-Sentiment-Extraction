@@ -6,10 +6,15 @@
 
 
 # 训练
+
+use GPU:
 ```shell script
 ./run.sh GPU_id
 ```
-
+use CPU:
+```shell script
+./run.sh -1
+```
 # 测试
 
 -将得到的submission.csv提交至[kaggle比赛平台](https://www.kaggle.com/c/tweet-sentiment-extraction/submissions)
