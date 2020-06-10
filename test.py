@@ -9,12 +9,13 @@ from model import TweetModel
 from utils import get_selected_text
 
 
-def test(MODEL_PATH='roberta-base'):
+def test_it(MODEL_PATH='roberta-base'):
     models = []
     for t in os.listdir('type'):
         for model_file in os.listdir(os.path.join('type', t)):
             model = TweetModel(MODEL_PATH=t)
-            model.cuda()
+            # model.cuda()
+            model.cpu()
             model.load_state_dict(torch.load(os.path.join(os.path.join('type', t), model_file)))
             model.eval()
             models.append(model)
@@ -36,11 +37,12 @@ def test(MODEL_PATH='roberta-base'):
         # len_logits = []
         for model in models:
             with torch.no_grad():
+                model.cuda()
                 output = model(ids, masks)
                 start_logits.append(torch.softmax(output[0], dim=1).cpu().detach().numpy())
                 end_logits.append(torch.softmax(output[1], dim=1).cpu().detach().numpy())
                 # len_logits.append(torch.softmax(output[2], dim=1).cpu().detach().numpy())
-
+                model.cpu()
         start_logits = np.mean(start_logits, axis=0)
         end_logits = np.mean(end_logits, axis=0)
         # len_logits = np.mean(len_logits, axis=0)
@@ -71,4 +73,4 @@ def test(MODEL_PATH='roberta-base'):
     sub_df.head()
 
 if __name__ == '__main__':
-    test()
+    test_it()

@@ -16,7 +16,7 @@ from utils import loss_fn, compute_jaccard_score, EarlyStopping
 
 warnings.filterwarnings('ignore')
 import argparse
-from test import test
+from test import test_it
 
 paser = argparse.ArgumentParser()
 paser.add_argument('--model', type=str, default='roberta-base')
@@ -158,4 +158,4 @@ for fold, (train_idx, val_idx) in enumerate(skf.split(train_df, train_df.sentime
         scheduler
     )
 
-test(MODEL_PATH)
+test_it(MODEL_PATH)
