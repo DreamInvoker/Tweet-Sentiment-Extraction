@@ -5,6 +5,9 @@
 - 下载预训练模型[roberta-base](https://cdn.huggingface.co/roberta-base-pytorch_model.bin)并重命名为pytorch_model.bin 存放至roberta-base目录中
 
 # 环境依赖
+
+请尽量在linux环境下运行代码
+
 - python3.6
 - torch 1.4.0
 - transformers 2.10.0
@@ -13,6 +16,7 @@
 - tokenizers 0.7.0
 - numpy 1.18.1
 - pandas 1.0.4
+
 # 训练
 
 use GPU:
