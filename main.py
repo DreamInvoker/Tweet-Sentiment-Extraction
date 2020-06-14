@@ -115,7 +115,7 @@ def train_model(model, dataloaders_dict, criterion, optimizer, num_epochs, filen
                     flag = True
         if flag:
             break
-        print()
+
     # torch.save(model.state_dict(), filename)
 
 
