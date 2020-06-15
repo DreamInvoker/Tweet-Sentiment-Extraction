@@ -6,8 +6,6 @@
 
 # 环境依赖
 
-请尽量在linux环境下运行代码
-
 - python3.6
 - torch 1.4.0
 - transformers 2.10.0
@@ -18,6 +16,10 @@
 - pandas 1.0.4
 
 # 训练
+
+` 
+请尽量在linux环境下运行代码
+`
 
 use GPU:
 ```shell script
